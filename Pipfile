@@ -9,6 +9,7 @@ flake8 = "*"
 pipenv-setup = "*"
 wheel = "*"
 twine = "*"
+pytest = "*"
 
 [packages]
 pypiwin32 = "*"

@@ -74,5 +74,5 @@ class SASEGRuntimeERROR(Exception):
 
 if __name__ == "__main__":
     # simple test
-    run_egp(SCRIPTDIR_PATH / 'test_fail.egp')
-    # run_egp(SCRIPTDIR_PATH / 'test_no_error.egp')
+    run_egp(SCRIPTDIR_PATH.parent / 'test/test_fail.egp')
+    # run_egp(SCRIPTDIR_PATH.parent / 'test/test_no_error.egp')
