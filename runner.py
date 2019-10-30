@@ -8,13 +8,13 @@ import shutil
 from typing import Union
 import click
 
-def run_egp(egp_path: Union[str, Path]) -> None:
+def run_egp(egp_path: Union[str, Path], eg_version: str='7.1', profile_name='SAS Asia') -> None:
     """
     execute egp_path
     return True if execution log has no error log.
     """
-    app = win32com.client.Dispatch('SASEGObjectModel.Application.7.1')
-    app.SetActiveProfile("SAS Asia")
+    app = win32com.client.Dispatch(f'SASEGObjectModel.Application.{eg_version}')
+    app.SetActiveProfile(profile_name)
     prjObject = app.Open(str(egp_path), "")
     prjObject.Run()
     click.secho('run finished', fg='green')
