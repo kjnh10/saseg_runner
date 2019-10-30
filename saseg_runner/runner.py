@@ -16,7 +16,7 @@ def run_egp(
         eg_version: str = '7.1',
         profile_name: str = 'SAS Asia',
         remove_log: bool = True,
-) -> None:
+        ) -> None:
     """
     execute egp_path
     return True if execution log has no error log.
@@ -38,7 +38,7 @@ def run_egp(
     if (log_dir.exists()):
         shutil.rmtree(log_dir)
 
-    subprocess.run(f'Cscript {SCRIPTDIR_PATH}/ExtractCodeAndLog.vbs {egp_path}')
+    subprocess.run(f'Cscript {SCRIPTDIR_PATH}/ExtractCodeAndLog.vbs {egp_path} {eg_version}')
     print('log created')
 
     error_happend = False

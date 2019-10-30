@@ -25,7 +25,6 @@ Dim Project
 
 ' Change if running a different version of EG
 Dim egVersion 
-egVersion = "SASEGObjectModel.Application.7.1"
 
 ' enumeration of project item types
 Const egLog = 0  
@@ -58,6 +57,8 @@ If WScript.Arguments.Count = 0 Then
   WScript.Echo "ERROR: Expecting the full path name of a project file"
   WScript.Quit -1
 End If
+
+egVersion = "SASEGObjectModel.Application." & WScript.Arguments.Item(1)
 
 ' Create a new SAS Enterprise Guide automation session
 On Error Resume Next
