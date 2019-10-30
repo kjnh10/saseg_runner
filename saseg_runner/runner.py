@@ -23,7 +23,7 @@ def run_egp(
     """
     if not Path(egp_path).exists():
         raise Exception(f'not found {egp_path}')
-    egp_path = egp_path.resolve()
+    egp_path = Path(egp_path).resolve()
 
     app = win32com.client.Dispatch(f'SASEGObjectModel.Application.{eg_version}')
     app.SetActiveProfile(profile_name)
