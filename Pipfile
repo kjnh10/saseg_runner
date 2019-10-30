@@ -6,11 +6,12 @@ verify_ssl = true
 [dev-packages]
 pylint = "*"
 flake8 = "*"
+pipenv-setup = "*"
 
 [packages]
-termcolor = "*"
 pypiwin32 = "*"
 click = "*"
+setuptools-scm = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.6"
