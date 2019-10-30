@@ -7,6 +7,8 @@ verify_ssl = true
 pylint = "*"
 flake8 = "*"
 pipenv-setup = "*"
+wheel = "*"
+twine = "*"
 
 [packages]
 pypiwin32 = "*"
