@@ -33,17 +33,20 @@ def run_egp(egp_path: Union[str, Path], eg_version: str='7.1', profile_name='SAS
         with open(log, mode='r') as f:
             contents = f.read()
             error = re.search("^ERROR:", contents, re.MULTILINE)
-            if (error):  # TODO:この条件がきいていない。
+            if (error):
                 click.secho(f"[{log.stem}] failed in {egp_path.name}", fg="red")
                 start = error.start()
                 last = contents.find('\n', start)
                 print(contents[start:last])
                 raise SASEGRuntimeERROR
 
-    print(f'successfully finished exectuing {egp_path.name}')
+    click.secho(f'successfully finished exectuing {egp_path.name}', fg='green')
+
 
 class SASEGRuntimeERROR(Exception):
     "error the result logs of egp file include ERROR line"
 
+
 if __name__ == "__main__":
-    run_egp(Path('./test_fail.egp'))
+    # run_egp(Path('./test_fail.egp'))
+    run_egp(Path('./test_no_error.egp'))
