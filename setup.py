@@ -121,7 +121,7 @@ setup(
     include_package_data=True,
     entry_points={
         'console_scripts':[
-            'run_egp = saseg_runner.runner:run_egp',
+            'run_egp = saseg_runner.runner:cli',
         ],
     },
     # Specify which Python versions you support. In contrast to the

@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import shutil
 from typing import Union
+import sys
 import click
 
 SCRIPTDIR_PATH = Path(os.path.dirname(__file__)).resolve()
@@ -61,6 +62,10 @@ def run_egp(
         if remove_log:
             shutil.rmtree(log_dir)
         click.secho(f'successfully finished exectuing {egp_path.name}', fg='green')
+
+
+def cli():
+    run_egp(sys.argv[1])
 
 
 class SASEGRuntimeERROR(Exception):
