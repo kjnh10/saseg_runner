@@ -1,18 +1,30 @@
 # %%
 import win32com.client
-import win32gui
 import subprocess
 import re
+import os
 from pathlib import Path
 import shutil
 from typing import Union
 import click
 
-def run_egp(egp_path: Union[str, Path], eg_version: str='7.1', profile_name='SAS Asia') -> None:
+SCRIPTDIR_PATH = Path(os.path.dirname(__file__)).resolve()
+
+
+def run_egp(
+        egp_path: Union[str, Path],
+        eg_version: str = '7.1',
+        profile_name: str = 'SAS Asia',
+        remove_log: bool = True,
+) -> None:
     """
     execute egp_path
     return True if execution log has no error log.
     """
+    if not Path(egp_path).exists():
+        raise Exception(f'not found {egp_path}')
+    egp_path = egp_path.resolve()
+
     app = win32com.client.Dispatch(f'SASEGObjectModel.Application.{eg_version}')
     app.SetActiveProfile(profile_name)
     prjObject = app.Open(str(egp_path), "")
@@ -20,15 +32,16 @@ def run_egp(egp_path: Union[str, Path], eg_version: str='7.1', profile_name='SAS
     click.secho('run finished', fg='green')
     prjObject.Save()
     click.secho('saved', fg='green')
-    # prjObject.Close()
+    prjObject.Close()
 
     log_dir = Path(f'./{egp_path.stem}_CodeAndLogs')
     if (log_dir.exists()):
         shutil.rmtree(log_dir)
 
-    subprocess.run(f'Cscript ExtractCodeAndLog.vbs {egp_path.name}')
+    subprocess.run(f'Cscript {SCRIPTDIR_PATH}/ExtractCodeAndLog.vbs {egp_path}')
     print('log created')
 
+    error_happend = False
     for log in log_dir.rglob('*.log'):
         with open(log, mode='r') as f:
             contents = f.read()
@@ -38,9 +51,16 @@ def run_egp(egp_path: Union[str, Path], eg_version: str='7.1', profile_name='SAS
                 start = error.start()
                 last = contents.find('\n', start)
                 print(contents[start:last])
-                raise SASEGRuntimeERROR
-
-    click.secho(f'successfully finished exectuing {egp_path.name}', fg='green')
+                error_happend = True
+                break
+    if error_happend:
+        if remove_log:
+            shutil.rmtree(log_dir)
+        raise SASEGRuntimeERROR
+    else:
+        if remove_log:
+            shutil.rmtree(log_dir)
+        click.secho(f'successfully finished exectuing {egp_path.name}', fg='green')
 
 
 class SASEGRuntimeERROR(Exception):
@@ -48,5 +68,6 @@ class SASEGRuntimeERROR(Exception):
 
 
 if __name__ == "__main__":
-    # run_egp(Path('./test_fail.egp'))
-    run_egp(Path('./test_no_error.egp'))
+    # simple test
+    run_egp(SCRIPTDIR_PATH / 'test_fail.egp')
+    # run_egp(SCRIPTDIR_PATH / 'test_no_error.egp')
