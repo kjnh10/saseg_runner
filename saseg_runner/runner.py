@@ -77,7 +77,7 @@ def run_egp(
     if (log_dir.exists()):
         shutil.rmtree(log_dir)
     res = subprocess.run(
-        f'Cscript {SCRIPTDIR_PATH}/ExtractCodeAndLog.vbs {output} {eg_version}',
+        f'Cscript {SCRIPTDIR_PATH}/ExtractCodeAndLog.vbs "{output}" "{eg_version}"',
         capture_output=True,
         check=True,
     )

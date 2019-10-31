@@ -8,6 +8,8 @@ SCRIPTDIR = Path(os.path.dirname(__file__)).resolve()
 
 fail_egp = SCRIPTDIR / 'test_fail.egp'
 success_egp = SCRIPTDIR / 'test_success.egp'
+japanese_char_in_path_egp = SCRIPTDIR / '日本語フォルダ名/test_success.egp'
+space_in_path_egp = SCRIPTDIR / 'space exist/test_success.egp'
 
 
 def test_success():
@@ -16,6 +18,14 @@ def test_success():
 
 def test_success_with_Path_object():
     run_egp(success_egp)
+
+
+def test_japanese_char_in_path():
+    run_egp(str(japanese_char_in_path_egp))
+
+
+def test_space_in_path():
+    run_egp(str(space_in_path_egp))
 
 
 def test_fail():
