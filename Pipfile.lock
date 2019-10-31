@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6dc10c4c90d3effed9472254fb2ddf1848045c78a4cfa10131af55a359ebb46f"
+            "sha256": "2355a2aec17738c19c42ee967c71645284a0c825e82ae8da0a17be70e10e34b3"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -128,6 +128,7 @@
                 "sha256:05eed71e2e327246ad6b38c540c4a3117230b19679b875190486ddd2d721422d",
                 "sha256:f8ac84de7840f5b9c4e3347b3c1eaa50f7e49c2b07596221daec5edaabbd7c48"
             ],
+            "markers": "sys_platform == 'win32'",
             "version": "==0.4.1"
         },
         "docutils": {
@@ -292,6 +293,14 @@
             ],
             "version": "==2.4.2"
         },
+        "pypiwin32": {
+            "hashes": [
+                "sha256:67adf399debc1d5d14dffc1ab5acacb800da569754fafdc576b2a039485aa775",
+                "sha256:71be40c1fbd28594214ecaecb58e7aa8b708eabfa0125c8a109ebd51edbd776a"
+            ],
+            "index": "pypi",
+            "version": "==223"
+        },
         "pytest": {
             "hashes": [
                 "sha256:27abc3fef618a01bebb1f0d6d303d2816a99aa87a5968ebc32fe971be91eb1e6",
@@ -299,6 +308,23 @@
             ],
             "index": "pypi",
             "version": "==5.2.2"
+        },
+        "pywin32": {
+            "hashes": [
+                "sha256:0443e9bb196e72480f50cbddc2cf98fbb858a77d02e281ba79489ea3287b36e9",
+                "sha256:09bbe7cdb29eb40ab2e83f7a232eeeedde864be7a0622b70a90f456aad07a234",
+                "sha256:0d8e0f47808798d320c983574c36c49db642678902933a210edd40157d206fd0",
+                "sha256:0db7c9f4b93528afd080d35912a60be2f86a1d6c49c0a9cf9cedd106eed81ea3",
+                "sha256:749e590875051661ecefbd9dfa957a485016de0f25e43f5e70f888ef1e29587b",
+                "sha256:779d3e9d4b934f2445d2920c3941416d99af72eb7f7fd57a63576cc8aa540ad6",
+                "sha256:7c89d2c11a31c7aaa16dc4d25054d7e0e99d6f6b24193cf62c83850484658c87",
+                "sha256:81f7732b662c46274d7d8c411c905d53e71999cba95457a0686467c3ebc745ca",
+                "sha256:9db1fb8830bfa99c5bfd335d4482c14db5c6f5028db3b006787ef4200206242b",
+                "sha256:bd8d04835db28646d9e07fd0ab7c7b18bd90e89dfdc559e60389179495ef30da",
+                "sha256:fc6822a68afd79e97b015985dd455767c72009b81bcd18957068626c43f11e75",
+                "sha256:fe6cfc2045931866417740b575231c7e12d69d481643be1493487ad53b089959"
+            ],
+            "version": "==225"
         },
         "readme-renderer": {
             "hashes": [
@@ -320,6 +346,10 @@
                 "sha256:968089d4584ad4ad7c171454f0a5c6dac23971e9472521ea3b6d49d610aa6fc0"
             ],
             "version": "==0.9.1"
+        },
+        "saseg-runner": {
+            "editable": true,
+            "path": "."
         },
         "six": {
             "hashes": [
