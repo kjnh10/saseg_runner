@@ -88,7 +88,7 @@ def run_egp(
     if error_happend:
         if remove_log:
             shutil.rmtree(log_dir)
-        raise SASEGRuntimeERROR
+        raise SASEGRuntimeError
     else:
         if remove_log:
             shutil.rmtree(log_dir)
@@ -102,7 +102,7 @@ def cli():
     run_egp(sys.argv[1])
 
 
-class SASEGRuntimeERROR(Exception):
+class SASEGRuntimeError(Exception):
     "error the result logs of egp file include ERROR line"
 
 
