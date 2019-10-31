@@ -8,39 +8,70 @@ import shutil
 from typing import Union
 import sys
 import click
+import time
+import datetime
 
 SCRIPTDIR_PATH = Path(os.path.dirname(__file__)).resolve()
 
 
 def run_egp(
         egp_path: Union[str, Path],
-        eg_version: str = '7.1',
         profile_name: str = 'SAS Asia',
+        eg_version: str = '7.1',
         remove_log: bool = True,
+        verbose: bool = False,
+        overwrite: bool = False,
         ) -> None:
     """
     execute egp_path
     return True if execution log has no error log.
     """
+    start_time = time.time()
+
     if not Path(egp_path).exists():
         raise Exception(f'not found {egp_path}')
     egp_path = Path(egp_path).resolve()
 
+    print(f'opening SAS Enterprise Guide {eg_version}')
     app = win32com.client.Dispatch(f'SASEGObjectModel.Application.{eg_version}')
+    click.secho('-> application instance created', fg='green')
+
+    print(f'activating profile:[{profile_name}]')
     app.SetActiveProfile(profile_name)
+    click.secho(f'-> profile:[{profile_name}] activated', fg='green')
+
+    print(f'opening {egp_path}')
     prjObject = app.Open(str(egp_path), "")
+    click.secho('-> egp file opened', fg='green')
+
+    print(f'running {egp_path}')
     prjObject.Run()
-    click.secho('run finished', fg='green')
-    prjObject.Save()
-    click.secho('saved', fg='green')
+    click.secho('-> run finished', fg='green')
+
+    output = ""
+    if overwrite:
+        output = egp_path
+    else:
+        timestamp = datetime.datetime.now().strftime('%Y%m%d-%H%M')
+        output = str(egp_path.parent / (egp_path.stem + '_' + timestamp + '.egp'))
+
+    prjObject.SaveAs(output)
+    click.secho(f'-> saved to {output}', fg='green')
+
     prjObject.Close()
 
-    log_dir = Path(f'./{egp_path.stem}_CodeAndLogs')
+    print(f'getting logs from {output}')
+    log_dir = Path(f'./{Path(output).stem}_CodeAndLogs')
     if (log_dir.exists()):
         shutil.rmtree(log_dir)
-
-    subprocess.run(f'Cscript {SCRIPTDIR_PATH}/ExtractCodeAndLog.vbs {egp_path} {eg_version}')
-    print('log created')
+    res = subprocess.run(
+        f'Cscript {SCRIPTDIR_PATH}/ExtractCodeAndLog.vbs {output} {eg_version}',
+        capture_output=True,
+        check=True,
+    )
+    if verbose:
+        print(res.stdout)
+    click.secho('-> log created', fg='green')
 
     error_happend = False
     for log in log_dir.rglob('*.log'):
@@ -62,6 +93,9 @@ def run_egp(
         if remove_log:
             shutil.rmtree(log_dir)
         click.secho(f'successfully finished exectuing {egp_path.name}', fg='green')
+
+    elapsed_time = int(time.time() - start_time)
+    print(f"elapsed_time:{elapsed_time}[sec]")
 
 
 def cli():
