@@ -11,11 +11,12 @@ wheel = "*"
 twine = "*"
 pytest = "*"
 saseg-runner = {editable = true,path = "."}
+pytest-cov = "*"
+setuptools-scm = "*"
 
 [packages]
 pypiwin32 = "*"
 click = "*"
-setuptools-scm = "*"
 
 [requires]
 python_version = "3.6"
