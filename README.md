@@ -4,9 +4,9 @@
 [![PyPI](https://img.shields.io/pypi/l/saseg_runner.svg)](#)
 
 # Overview
-This repository gets you run egp file from python or command line.
+saseg_runner get you run egp file from python or command line.
 
-# Reuirment
+# Requirment
 * windows
 * python 3.6 later
 * SAS Enterprise guide
@@ -65,7 +65,7 @@ run_egp(egp_path='test_fail.egp', eg_version='7.1', profile_name='Your Profile')
 # __main__.SASEGRuntimeError
 ```
 
-### Other Parameters
+### Parameters
 * egp_path : Union[str, Path]
     * SAS Enterprise Guide file path.
 * profile_name : str
@@ -77,7 +77,7 @@ run_egp(egp_path='test_fail.egp', eg_version='7.1', profile_name='Your Profile')
 * verbose: bool
     * default is False
 
-## as command line
+## from command line
 ```bash
 run_egp <your egp file path>
 ```
