@@ -22,7 +22,7 @@ pip install saseg_runner
 
 ```python
 from saseg_runner import run_egp, SASEGRuntimeError
-run_egp(egp_path='test_success.egp', egp_version='7.1', profile_name='Your Profile')
+run_egp(egp_path='test_success.egp', eg_version='7.1', profile_name='Your Profile')
 
 # opening SAS Enterprise Guide 7.1
 # -> application instance created
@@ -42,7 +42,7 @@ run_egp(egp_path='test_success.egp', egp_version='7.1', profile_name='Your Profi
 In case some tasks in the egp file fails, 'run_egp' can raise Exception of SASEGRuntimeError!
 ```python
 from saseg_runner import run_egp, SASEGRuntimeError
-run_egp(egp_path='test_fail.egp', egp_version='7.1', profile_name='Your Profile')
+run_egp(egp_path='test_fail.egp', eg_version='7.1', profile_name='Your Profile')
 
 # opening SAS Enterprise Guide 7.1
 # -> application instance created
