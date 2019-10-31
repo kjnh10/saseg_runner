@@ -18,13 +18,25 @@ def run_egp(
         egp_path: Union[str, Path],
         profile_name: str = 'SAS Asia',
         eg_version: str = '7.1',
+        overwrite: bool = False,
         remove_log: bool = True,
         verbose: bool = False,
-        overwrite: bool = False,
         ) -> None:
     """
     execute egp_path
-    return True if execution log has no error log.
+
+    Parameters
+    ------------
+    egp_path : Union[str, Path]
+        SAS Enterprise Guide file path.
+    profile_name : str
+        profile name to use
+    overwrite: bool
+        controls whether to save the egp file after exection. if False, timestamp is added to filename. The default is False.
+    remove_log: bool
+        wether remove log files or not. the default is True.
+    verbose: bool
+        default is False
     """
     start_time = time.time()
 
