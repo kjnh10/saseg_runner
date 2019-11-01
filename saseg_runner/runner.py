@@ -89,7 +89,7 @@ def run_egp(
     for log in log_dir.rglob('*.log'):
         with open(log, mode='r') as f:
             contents = f.read()
-            error = re.search("^ERROR:", contents, re.MULTILINE)
+            error = re.search("^ERROR.*:", contents, re.MULTILINE)
             if (error):
                 click.secho(f"[{log.stem}] failed in {egp_path.name}", fg="red")
                 start = error.start()

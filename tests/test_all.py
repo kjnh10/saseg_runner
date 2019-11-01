@@ -33,6 +33,11 @@ def test_fail():
         run_egp(str(fail_egp))
 
 
+def test_fail_error_format2():  # there exists an error format like "ERROR 22-232: ......."
+    with pytest.raises(SASEGRuntimeError):
+        run_egp(str(SCRIPTDIR / 'test_error_format2.egp'))
+
+
 def test_cli_success():
     res = subprocess.run(f'run_egp {str(success_egp)}')
     assert(res.returncode == 0)
