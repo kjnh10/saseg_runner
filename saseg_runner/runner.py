@@ -65,7 +65,7 @@ def run_egp(
         output = egp_path
     else:
         timestamp = datetime.datetime.now().strftime('%Y%m%d-%H%M')
-        output = str(egp_path.parent / (egp_path.stem + '_' + timestamp + '.egp'))
+        output = str(egp_path.parent / ('.' + egp_path.stem + '_' + timestamp + '.egp'))
 
     prjObject.SaveAs(output)
     click.secho(f'-> saved to {output}', fg='green')
@@ -102,6 +102,7 @@ def run_egp(
         shutil.rmtree(log_dir)
 
     if error_happend:
+        os.rename(output, str(Path(output).parent/(Path(output).stem+'.ERROR.egp')))
         raise SASEGRuntimeError
     else:
         click.secho(f'successfully finished exectuing {egp_path.name}', fg='green')
