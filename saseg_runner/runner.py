@@ -97,13 +97,13 @@ def run_egp(
                 print(contents[start:last])
                 error_happend = True
                 break
+
+    if remove_log:
+        shutil.rmtree(log_dir)
+
     if error_happend:
-        if remove_log:
-            shutil.rmtree(log_dir)
         raise SASEGRuntimeError
     else:
-        if remove_log:
-            shutil.rmtree(log_dir)
         click.secho(f'successfully finished exectuing {egp_path.name}', fg='green')
 
     elapsed_time = int(time.time() - start_time)
