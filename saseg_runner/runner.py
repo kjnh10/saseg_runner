@@ -78,6 +78,8 @@ def run_egp(
         shutil.rmtree(log_dir)
     res = subprocess.run(
         f'Cscript {SCRIPTDIR_PATH}/ExtractCodeAndLog.vbs "{output}" "{eg_version}"',
+        stdout=PIPE,
+        stderr=PIPE,
         check=True,
     )
     if verbose:
