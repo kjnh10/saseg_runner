@@ -137,9 +137,9 @@ setup(
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
-        "click==7.0",
+        "click>=7.0",
         "pypiwin32==223",
-        "pywin32==225",
+        "pywin32>=227",
     ],  # Optional
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"
