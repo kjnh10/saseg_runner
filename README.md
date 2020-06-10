@@ -73,7 +73,7 @@ run_egp(egp_path='test_fail.egp', eg_version='7.1', profile_name='Your Profile')
 * overwrite: bool
     * controls whether to save the egp file after exection. if False, timestamp is added to filename. The default is False.
 * remove_log: bool
-    * wether remove log files or not. the default is True.
+    * whether to remove log files or not. the default is True.
 * verbose: bool
     * default is False
 
