@@ -10,7 +10,7 @@ pipenv-setup = "*"
 wheel = "*"
 twine = "*"
 pytest = "*"
-saseg-runner = {editable = true,path = "."}
+saseg_runner = {editable = true,path = "."}
 pytest-cov = "*"
 setuptools-scm = "*"
 
@@ -19,4 +19,4 @@ pypiwin32 = "*"
 click = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"
