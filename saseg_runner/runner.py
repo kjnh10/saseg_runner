@@ -42,7 +42,7 @@ def run_egp(
 
     if not Path(egp_path).exists():
         raise Exception(f'not found {egp_path}')
-    egp_path = Path(egp_path).resolve()
+    egp_path = Path(os.path.abspath(egp_path))
 
     print(f'opening SAS Enterprise Guide {eg_version}')
     app = win32com.client.Dispatch(f'SASEGObjectModel.Application.{eg_version}')
