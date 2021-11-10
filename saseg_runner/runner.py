@@ -61,21 +61,14 @@ class EGRunner:
         Args:
             egp_path (Union[str, Path]): SAS Enterprise Guide file path.
         """
-        start_time = time.time()
-
-        egp_path = _check_egp_file_existence(egp_path)
-        app = _open_enterprise_guide(self.eg_version)
-        _activate_enterprise_guide_profile(self.profile_name, app)
-        project_object = _open_egp(egp_path, app)
-        _run_egp(egp_path, project_object)
-        output = _save_and_close_egp(egp_path, self.overwrite, project_object)
-        log_dir = _retrieve_logs(self.eg_version, self.verbose, output)
-        error_happend = _check_log_for_errors(egp_path, log_dir)
-        if self.remove_log:
-            shutil.rmtree(log_dir)
-        _finish_and_clean_up(egp_path, output, error_happend)
-        elapsed_time = int(time.time() - start_time)
-        print(f"elapsed_time:{elapsed_time}[sec]")
+        run_egp(
+            egp_path,
+            self.profile_name,
+            self.eg_version,
+            self.overwrite,
+            self.remove_log,
+            self.verbose,
+        )
 
 
 def run_egp(

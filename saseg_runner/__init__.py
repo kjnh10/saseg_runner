@@ -1,1 +1,1 @@
-from saseg_runner.runner import run_egp, SASEGRuntimeError
+from .runner import run_egp, SASEGRuntimeError, EGRunner
