@@ -1,17 +1,18 @@
 # %%
-import win32com.client
-import subprocess
-import re
-import os
-from pathlib import Path
-import shutil
-from typing import Union
-import sys
-import click
-import time
 import datetime
+import os
+import re
+import shutil
+import subprocess
+import sys
+import time
+from pathlib import Path
+from typing import Union
 
-SCRIPTDIR_PATH = Path(os.path.dirname(__file__)).resolve()
+import click
+import win32com.client
+
+SCRIPTDIR_PATH = Path(__file__).parent.resolve()
 
 
 def run_egp(
@@ -42,7 +43,7 @@ def run_egp(
 
     if not Path(egp_path).exists():
         raise Exception(f'not found {egp_path}')
-    egp_path = Path(os.path.abspath(egp_path))
+    egp_path = Path(egp_path).resolve()
 
     print(f'opening SAS Enterprise Guide {eg_version}')
     app = win32com.client.Dispatch(f'SASEGObjectModel.Application.{eg_version}')
