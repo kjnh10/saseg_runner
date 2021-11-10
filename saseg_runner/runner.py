@@ -46,59 +46,14 @@ def run_egp(
     _activate_enterprise_guide_profile(profile_name, app)
     prjObject = _open_egp(egp_path, app)
     _run_egp(egp_path, prjObject)
-
-    output = ""
-    if overwrite:
-        output = egp_path
-    else:
-        timestamp = datetime.datetime.now().strftime('%Y%m%d-%H%M')
-        output = str(egp_path.parent / ('.' + egp_path.stem + '_' + timestamp + '.egp'))
-
-    prjObject.SaveAs(output)
-    click.secho(f'-> saved to {output}', fg='green')
-
-    prjObject.Close()
-
-    print(f'getting logs from {output}')
-    log_dir = Path(f'./{Path(output).stem}_CodeAndLogs')
-    if (log_dir.exists()):
-        shutil.rmtree(log_dir)
-    res = subprocess.run(
-        f'Cscript "{SCRIPTDIR_PATH}/ExtractCodeAndLog.vbs" "{output}" "{eg_version}"',
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=True,
-    )
-    if verbose:
-        print(res.stdout)
-    click.secho('-> log created', fg='green')
-
-    error_happend = False
-    for log in log_dir.rglob('*.log'):
-        with open(log, mode='r') as f:
-            contents = f.read()
-            error = re.search("^ERROR.*:", contents, re.MULTILINE)
-            if (error):
-                click.secho(f"[{log.stem}] failed in {egp_path.name}", fg="red")
-                start = error.start()
-                last = contents.find('\n', start)
-                print(contents[start:last])
-                error_happend = True
-                break
-
+    output = _save_and_close_egp(egp_path, overwrite, prjObject)
+    log_dir = _retrieve_logs(eg_version, verbose, output)
+    error_happend = _check_log_for_errors(egp_path, log_dir)
     if remove_log:
         shutil.rmtree(log_dir)
-
-    if error_happend:
-        os.rename(output, str(Path(output).parent/(Path(output).stem+'.ERROR.egp')))
-        raise SASEGRuntimeError
-    else:
-        click.secho(f'successfully finished exectuing {egp_path.name}', fg='green')
-
+    _finish_and_clean_up(egp_path, output, error_happend)
     elapsed_time = int(time.time() - start_time)
     print(f"elapsed_time:{elapsed_time}[sec]")
-
-
 
 
 
@@ -131,6 +86,59 @@ def _run_egp(egp_path:str, prjObject)->None:
     print(f'running {egp_path}')
     prjObject.Run()
     click.secho('-> run finished', fg='green')
+
+def _check_log_for_errors(egp_path, log_dir):
+    error_happend = False
+    for log in log_dir.rglob('*.log'):
+        with open(log, mode='r') as f:
+            contents = f.read()
+            error = re.search("^ERROR.*:", contents, re.MULTILINE)
+            if (error):
+                click.secho(f"[{log.stem}] failed in {egp_path.name}", fg="red")
+                start = error.start()
+                last = contents.find('\n', start)
+                print(contents[start:last])
+                error_happend = True
+                break
+    return error_happend
+
+def _save_and_close_egp(egp_path, overwrite, prjObject):
+    output = ""
+    if overwrite:
+        output = egp_path
+    else:
+        timestamp = datetime.datetime.now().strftime('%Y%m%d-%H%M')
+        output = str(egp_path.parent / ('.' + egp_path.stem + '_' + timestamp + '.egp'))
+
+    prjObject.SaveAs(output)
+    click.secho(f'-> saved to {output}', fg='green')
+
+    prjObject.Close()
+    return output
+
+
+def _retrieve_logs(eg_version, verbose, output):
+    print(f'getting logs from {output}')
+    log_dir = Path(f'./{Path(output).stem}_CodeAndLogs')
+    if (log_dir.exists()):
+        shutil.rmtree(log_dir)
+    res = subprocess.run(
+        f'Cscript "{SCRIPTDIR_PATH}/ExtractCodeAndLog.vbs" "{output}" "{eg_version}"',
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True,
+    )
+    if verbose:
+        print(res.stdout)
+    click.secho('-> log created', fg='green')
+    return log_dir
+
+def _finish_and_clean_up(egp_path, output, error_happend):
+    if error_happend:
+        os.rename(output, str(Path(output).parent/(Path(output).stem+'.ERROR.egp')))
+        raise SASEGRuntimeError
+    else:
+        click.secho(f'successfully finished exectuing {egp_path.name}', fg='green')
 
 def cli():
     run_egp(sys.argv[1])
