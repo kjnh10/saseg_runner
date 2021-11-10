@@ -1,3 +1,6 @@
+"""Module to contain the EGRunner class and the associated function (which will likely be
+deprecated in the future)
+"""
 # %%
 import datetime
 import os
@@ -18,6 +21,8 @@ DEFAULT_EG_VERSION = "7.1"
 
 
 class EGRunner:
+    """Class that can be used to save settings for running multiple EG files."""
+
     def __init__(
         self,
         profile_name: str = DEFAULT_PROFILE_NAME,
@@ -29,11 +34,17 @@ class EGRunner:
         """Class that can be used to save settings for running multiple EG files.
 
         Args:
-            profile_name (str, optional): profile name to use when running. Defaults to the value when the instance was created.
-            eg_version (str, optional): Which version of EG to use. Defaults to the value when the instance was created.
-            overwrite (bool, optional): controls whether to save the egp file after exection. if False, timestamp is added to filename. Defaults to the value when the instance was created.
-            remove_log (bool, optional): Whether to remove log files or not. Defaults to the value when the instance was created.
-            verbose (bool, optional): [description]. Defaults to the value when the instance was created.
+            profile_name (str, optional): profile name to use when running. Defaults to the value
+                when the instance was created.
+            eg_version (str, optional): Which version of EG to use. Defaults to the value when
+                the instance was created.
+            overwrite (bool, optional): controls whether to save the egp file after exection.
+                if False, timestamp is added to filename. Defaults to the value when the
+                instance was created.
+            remove_log (bool, optional): Whether to remove log files or not. Defaults to the
+                value when the instance was created.
+            verbose (bool, optional): [description]. Defaults to the value when the
+                instance was created.
         """
         self.profile_name = profile_name
         self.eg_version = eg_version
@@ -55,9 +66,9 @@ class EGRunner:
         egp_path = _check_egp_file_existence(egp_path)
         app = _open_enterprise_guide(self.eg_version)
         _activate_enterprise_guide_profile(self.profile_name, app)
-        prjObject = _open_egp(egp_path, app)
-        _run_egp(egp_path, prjObject)
-        output = _save_and_close_egp(egp_path, self.overwrite, prjObject)
+        project_object = _open_egp(egp_path, app)
+        _run_egp(egp_path, project_object)
+        output = _save_and_close_egp(egp_path, self.overwrite, project_object)
         log_dir = _retrieve_logs(self.eg_version, self.verbose, output)
         error_happend = _check_log_for_errors(egp_path, log_dir)
         if self.remove_log:
@@ -81,7 +92,8 @@ def run_egp(
         egp_path (Union[str, Path]): SAS Enterprise Guide file path.
         profile_name (str, optional): profile name to use. Defaults to 'SAS Asia'.
         eg_version (str, optional): Which version of EG to use. Defaults to '7.1'.
-        overwrite (bool, optional): controls whether to save the egp file after exection. if False, timestamp is added to filename. Defaults to False.
+        overwrite (bool, optional): controls whether to save the egp file after exection.
+            if False, timestamp is added to filename. Defaults to False.
         remove_log (bool, optional): Whether to remove log files or not. Defaults to True.
         verbose (bool, optional): [description]. Defaults to False.
     """
@@ -90,9 +102,9 @@ def run_egp(
     egp_path = _check_egp_file_existence(egp_path)
     app = _open_enterprise_guide(eg_version)
     _activate_enterprise_guide_profile(profile_name, app)
-    prjObject = _open_egp(egp_path, app)
-    _run_egp(egp_path, prjObject)
-    output = _save_and_close_egp(egp_path, overwrite, prjObject)
+    project_object = _open_egp(egp_path, app)
+    _run_egp(egp_path, project_object)
+    output = _save_and_close_egp(egp_path, overwrite, project_object)
     log_dir = _retrieve_logs(eg_version, verbose, output)
     error_happend = _check_log_for_errors(egp_path, log_dir)
     if remove_log:
@@ -126,22 +138,22 @@ def _activate_enterprise_guide_profile(
 
 def _open_egp(egp_path: Path, app: win32com.client.CDispatch):
     print(f"opening {egp_path}")
-    prjObject = app.Open(str(egp_path), "")
+    project_object = app.Open(str(egp_path), "")
     click.secho("-> egp file opened", fg="green")
-    return prjObject
+    return project_object
 
 
-def _run_egp(egp_path: str, prjObject) -> None:
+def _run_egp(egp_path: str, project_object) -> None:
     print(f"running {egp_path}")
-    prjObject.Run()
+    project_object.Run()
     click.secho("-> run finished", fg="green")
 
 
 def _check_log_for_errors(egp_path, log_dir):
     error_happend = False
     for log in log_dir.rglob("*.log"):
-        with open(log, mode="r") as f:
-            contents = f.read()
+        with open(log, mode="r") as log_file:
+            contents = log_file.read()
             error = re.search("^ERROR.*:", contents, re.MULTILINE)
             if error:
                 click.secho(f"[{log.stem}] failed in {egp_path.name}", fg="red")
@@ -153,7 +165,7 @@ def _check_log_for_errors(egp_path, log_dir):
     return error_happend
 
 
-def _save_and_close_egp(egp_path, overwrite, prjObject):
+def _save_and_close_egp(egp_path, overwrite, project_object):
     output = ""
     if overwrite:
         output = egp_path
@@ -161,10 +173,10 @@ def _save_and_close_egp(egp_path, overwrite, prjObject):
         timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M")
         output = str(egp_path.parent / ("." + egp_path.stem + "_" + timestamp + ".egp"))
 
-    prjObject.SaveAs(output)
+    project_object.SaveAs(output)
     click.secho(f"-> saved to {output}", fg="green")
 
-    prjObject.Close()
+    project_object.Close()
     return output
 
 
@@ -194,6 +206,7 @@ def _finish_and_clean_up(egp_path, output, error_happend):
 
 
 def cli():
+    """Cli interface for eg runner"""
     run_egp(sys.argv[1])
 
 
