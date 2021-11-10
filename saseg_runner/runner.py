@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Union
 
 import click
+import pythoncom
 import win32com.client
 
 SCRIPTDIR_PATH = Path(__file__).parent.resolve()
@@ -125,7 +126,15 @@ def _activate_enterprise_guide_profile(
     profile_name: str, app: win32com.client.CDispatch
 ) -> None:
     print(f"activating profile:[{profile_name}]")
-    app.SetActiveProfile(profile_name)
+    try:
+        app.SetActiveProfile(profile_name)
+    except pythoncom.com_error as e:
+        if "The given profile name does not exist" in str(e):
+            raise SASEGProfileNotFound(
+                f"The given profile name '{profile_name}' wasn't found in EG"
+            )
+        else:
+            raise e
     click.secho(f"-> profile:[{profile_name}] activated", fg="green")
 
 
@@ -205,6 +214,10 @@ def cli():
 
 class SASEGRuntimeError(Exception):
     "Raised if the result logs of egp file include ERROR line"
+
+
+class SASEGProfileNotFound(Exception):
+    "Raised if the specified profile doesn't exist"
 
 
 if __name__ == "__main__":
