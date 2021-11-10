@@ -17,6 +17,57 @@ DEFAULT_PROFILE_NAME = "SAS Asia"
 DEFAULT_EG_VERSION = "7.1"
 
 
+class EGRunner:
+    def __init__(
+        self,
+        profile_name: str = DEFAULT_PROFILE_NAME,
+        eg_version: str = DEFAULT_EG_VERSION,
+        overwrite: bool = False,
+        remove_log: bool = True,
+        verbose: bool = False,
+    ):
+        self.profile_name = profile_name
+        self.eg_version = eg_version
+        self.overwrite = overwrite
+        self.remove_log = remove_log
+        self.verbose = verbose
+
+    def run_egp(
+        self,
+        egp_path: Union[str, Path],
+        profile_name: str = self.profile_name,
+        eg_version: str = self.eg_version,
+        overwrite: bool = self.overwrite,
+        remove_log: bool = self.remove_log,
+        verbose: bool = self.verbose,
+    ) -> None:
+        """Function to run an EGP file from Python.
+
+        Args:
+            egp_path (Union[str, Path]): SAS Enterprise Guide file path.
+            profile_name (str, optional): profile name to use. Defaults to the value when the instance was created.
+            eg_version (str, optional): Which version of EG to use. Defaults to the value when the instance was created.
+            overwrite (bool, optional): controls whether to save the egp file after exection. if False, timestamp is added to filename. Defaults to the value when the instance was created.
+            remove_log (bool, optional): Whether to remove log files or not. Defaults to the value when the instance was created.
+            verbose (bool, optional): [description]. Defaults to the value when the instance was created.
+        """
+        start_time = time.time()
+
+        egp_path = _check_egp_file_existence(egp_path)
+        app = _open_enterprise_guide(eg_version)
+        _activate_enterprise_guide_profile(profile_name, app)
+        prjObject = _open_egp(egp_path, app)
+        _run_egp(egp_path, prjObject)
+        output = _save_and_close_egp(egp_path, overwrite, prjObject)
+        log_dir = _retrieve_logs(eg_version, verbose, output)
+        error_happend = _check_log_for_errors(egp_path, log_dir)
+        if remove_log:
+            shutil.rmtree(log_dir)
+        _finish_and_clean_up(egp_path, output, error_happend)
+        elapsed_time = int(time.time() - start_time)
+        print(f"elapsed_time:{elapsed_time}[sec]")
+
+
 def run_egp(
     egp_path: Union[str, Path],
     profile_name: str = DEFAULT_PROFILE_NAME,
@@ -25,7 +76,7 @@ def run_egp(
     remove_log: bool = True,
     verbose: bool = False,
 ) -> None:
-    """[summary]
+    """Function to run an EGP file from Python.
 
     Args:
         egp_path (Union[str, Path]): SAS Enterprise Guide file path.
