@@ -41,25 +41,11 @@ def run_egp(
     """
     start_time = time.time()
 
-    if not Path(egp_path).exists():
-        raise Exception(f'not found {egp_path}')
-    egp_path = Path(egp_path).resolve()
-
-    print(f'opening SAS Enterprise Guide {eg_version}')
-    app = win32com.client.Dispatch(f'SASEGObjectModel.Application.{eg_version}')
-    click.secho('-> application instance created', fg='green')
-
-    print(f'activating profile:[{profile_name}]')
-    app.SetActiveProfile(profile_name)
-    click.secho(f'-> profile:[{profile_name}] activated', fg='green')
-
-    print(f'opening {egp_path}')
-    prjObject = app.Open(str(egp_path), "")
-    click.secho('-> egp file opened', fg='green')
-
-    print(f'running {egp_path}')
-    prjObject.Run()
-    click.secho('-> run finished', fg='green')
+    egp_path = _check_egp_file_existence(egp_path)
+    app = _open_enterprise_guide(eg_version)
+    _activate_enterprise_guide_profile(profile_name, app)
+    prjObject = _open_egp(egp_path, app)
+    _run_egp(egp_path, prjObject)
 
     output = ""
     if overwrite:
@@ -112,6 +98,39 @@ def run_egp(
     elapsed_time = int(time.time() - start_time)
     print(f"elapsed_time:{elapsed_time}[sec]")
 
+
+
+
+
+
+
+def _check_egp_file_existence(egp_path:str)->Path:
+    if not Path(egp_path).exists():
+        raise Exception(f'not found {egp_path}')
+    egp_path = Path(egp_path).resolve()
+    return egp_path
+
+def _open_enterprise_guide(eg_version:str)->win32com.client.CDispatch:
+    print(f'opening SAS Enterprise Guide {eg_version}')
+    app = win32com.client.Dispatch(f'SASEGObjectModel.Application.{eg_version}')
+    click.secho('-> application instance created', fg='green')
+    return app
+
+def _activate_enterprise_guide_profile(profile_name:str, app:win32com.client.CDispatch)->None:
+    print(f'activating profile:[{profile_name}]')
+    app.SetActiveProfile(profile_name)
+    click.secho(f'-> profile:[{profile_name}] activated', fg='green')
+
+def _open_egp(egp_path:Path, app:win32com.client.CDispatch):
+    print(f'opening {egp_path}')
+    prjObject = app.Open(str(egp_path), "")
+    click.secho('-> egp file opened', fg='green')
+    return prjObject
+
+def _run_egp(egp_path:str, prjObject)->None:
+    print(f'running {egp_path}')
+    prjObject.Run()
+    click.secho('-> run finished', fg='green')
 
 def cli():
     run_egp(sys.argv[1])
