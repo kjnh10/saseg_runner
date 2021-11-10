@@ -136,7 +136,7 @@ def _retrieve_logs(eg_version, verbose, output):
 def _finish_and_clean_up(egp_path, output, error_happend):
     if error_happend:
         os.rename(output, str(Path(output).parent/(Path(output).stem+'.ERROR.egp')))
-        raise SASEGRuntimeError
+        raise SASEGRuntimeError("Your EGP File had ERROR in the logs; please review")
     else:
         click.secho(f'successfully finished exectuing {egp_path.name}', fg='green')
 
@@ -145,7 +145,7 @@ def cli():
 
 
 class SASEGRuntimeError(Exception):
-    "error the result logs of egp file include ERROR line"
+    "Raised if the result logs of egp file include ERROR line"
 
 
 if __name__ == "__main__":
