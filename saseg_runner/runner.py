@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import sys
 import time
+
 from pathlib import Path
 from typing import Union
 
@@ -110,14 +111,22 @@ def run_egp(
 
 def _check_egp_file_existence(egp_path: str) -> Path:
     if not Path(egp_path).exists():
-        raise Exception(f"not found {egp_path}")
+        raise FileNotFoundError(f"not found {egp_path}")
     egp_path = Path(egp_path).resolve()
     return egp_path
 
 
 def _open_enterprise_guide(eg_version: str) -> win32com.client.CDispatch:
     print(f"opening SAS Enterprise Guide {eg_version}")
-    app = win32com.client.Dispatch(f"SASEGObjectModel.Application.{eg_version}")
+    try:
+        app = win32com.client.Dispatch(f"SASEGObjectModel.Application.{eg_version}")
+    except pythoncom.com_error as e:
+        if "Invalid class string" in str(e):
+            raise SASEGVersionNotFound(
+                f"The specified version {eg_version} cannot be found"
+            )
+        else:
+            raise e
     click.secho("-> application instance created", fg="green")
     return app
 
@@ -218,6 +227,10 @@ class SASEGRuntimeError(Exception):
 
 class SASEGProfileNotFound(Exception):
     "Raised if the specified profile doesn't exist"
+
+
+class SASEGVersionNotFound(Exception):
+    "Raised if the specified version doesn't exist"
 
 
 if __name__ == "__main__":
