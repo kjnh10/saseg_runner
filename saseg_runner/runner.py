@@ -22,7 +22,7 @@ DEFAULT_PROFILE_NAME = "SAS Asia"
 DEFAULT_EG_VERSION = "7.1"
 
 
-class EGRunner:
+class SASEGRunner:
     """Class that can be used to save settings for running multiple EG files."""
 
     def __init__(
