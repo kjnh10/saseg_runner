@@ -27,7 +27,7 @@ class SASEGRunner:
 
     def __init__(
         self,
-        profile_name: str = DEFAULT_PROFILE_NAME,
+        profile_name: str,
         eg_version: str = DEFAULT_EG_VERSION,
         overwrite: bool = False,
         remove_log: bool = True,
@@ -36,17 +36,12 @@ class SASEGRunner:
         """Class that can be used to save settings for running multiple EG files.
 
         Args:
-            profile_name (str, optional): profile name to use when running. Defaults to the value
-                when the instance was created.
-            eg_version (str, optional): Which version of EG to use. Defaults to the value when
-                the instance was created.
+            profile_name (str): profile name to use when running EGP files.
+            eg_version (str, optional): Which version of EG to use. Defaults to "7.1"
             overwrite (bool, optional): controls whether to save the egp file after exection.
-                if False, timestamp is added to filename. Defaults to the value when the
-                instance was created.
-            remove_log (bool, optional): Whether to remove log files or not. Defaults to the
-                value when the instance was created.
-            verbose (bool, optional): [description]. Defaults to the value when the
-                instance was created.
+                if False, timestamp is added to filename. Defaults to False
+            remove_log (bool, optional): Whether to remove log files or not. Defaults to True
+            verbose (bool, optional): [description]. Defaults to False
         """
         self.profile_name = profile_name
         self.eg_version = eg_version
