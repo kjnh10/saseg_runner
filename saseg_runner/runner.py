@@ -107,7 +107,8 @@ def run_egp(
 def _check_egp_file_existence(egp_path: str) -> Path:
     if not Path(egp_path).exists():
         raise FileNotFoundError(f"not found {egp_path}")
-    egp_path = Path(egp_path).resolve()
+    # egp_path = Path(egp_path).resolve() # this seems ok but cause the issue #20
+    egp_path = Path(os.path.abspath(egp_path))
     return egp_path
 
 
