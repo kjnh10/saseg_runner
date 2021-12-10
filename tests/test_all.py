@@ -1,43 +1,51 @@
 import subprocess
-import os
-import pytest
 from pathlib import Path
-from saseg_runner import run_egp
-from saseg_runner.runner import SASEGRuntimeError
-SCRIPTDIR = Path(os.path.dirname(__file__)).resolve()
 
-fail_egp = SCRIPTDIR / 'test_fail.egp'
-success_egp = SCRIPTDIR / 'test_success.egp'
-japanese_char_in_path_egp = SCRIPTDIR / '日本語フォルダ名/test_success.egp'
-space_in_path_egp = SCRIPTDIR / 'space exist/test_success.egp'
+import pytest
+import saseg_runner as eg_runner
+
+
+SCRIPTDIR = Path(__file__).parent.resolve()
+PROFILE_NAME = "SAS Asia"
+
+fail_egp = SCRIPTDIR / "test_fail.egp"
+success_egp = SCRIPTDIR / "test_success.egp"
+japanese_char_in_path_egp = SCRIPTDIR / "日本語フォルダ名/test_success.egp"
+space_in_path_egp = SCRIPTDIR / "space exist/test_success.egp"
 
 
 def test_success():
-    run_egp(str(success_egp))
+    eg_runner.run_egp(str(success_egp), PROFILE_NAME)
 
 
 def test_success_with_Path_object():
-    run_egp(success_egp)
+    eg_runner.run_egp(success_egp, PROFILE_NAME)
 
 
 def test_japanese_char_in_path():
-    run_egp(str(japanese_char_in_path_egp))
+    eg_runner.run_egp(str(japanese_char_in_path_egp), PROFILE_NAME)
 
 
 def test_space_in_path():
-    run_egp(str(space_in_path_egp))
+    eg_runner.run_egp(str(space_in_path_egp), PROFILE_NAME)
 
 
 def test_fail():
-    with pytest.raises(SASEGRuntimeError):
-        run_egp(str(fail_egp))
+    with pytest.raises(eg_runner.SASEGRuntimeError):
+        eg_runner.run_egp(str(fail_egp), PROFILE_NAME)
 
 
 def test_fail_error_format2():  # there exists an error format like "ERROR 22-232: ......."
-    with pytest.raises(SASEGRuntimeError):
-        run_egp(str(SCRIPTDIR / 'test_error_format2.egp'))
+    with pytest.raises(eg_runner.SASEGRuntimeError):
+        eg_runner.run_egp(str(SCRIPTDIR / "test_error_format2.egp"), PROFILE_NAME)
 
 
 def test_cli_success():
-    res = subprocess.run(f'run_egp {str(success_egp)}')
-    assert(res.returncode == 0)
+    res = subprocess.run(f"run_egp {str(success_egp)}", PROFILE_NAME)
+    assert res.returncode == 0
+
+
+def test_eg_runner():
+    eg = eg_runner.SASEGRunner(PROFILE_NAME)
+    eg.run_egp(success_egp)
+    eg.run_egp(success_egp)
