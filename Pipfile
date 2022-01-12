@@ -13,6 +13,8 @@ pytest = "*"
 saseg_runner = {editable = true,path = "."}
 pytest-cov = "*"
 setuptools-scm = "*"
+sphinx="*"
+sphinxcontrib-apidoc="*"
 
 [packages]
 pypiwin32 = "*"
