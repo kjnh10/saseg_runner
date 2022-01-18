@@ -1,5 +1,5 @@
 Welcome to saseg_runner's documentation!
-======================================
+============================================
 
 .. toctree::
    :maxdepth: 2
@@ -14,7 +14,7 @@ Welcome to saseg_runner's documentation!
    history
 
 Indices and tables
-==================
+========================
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`

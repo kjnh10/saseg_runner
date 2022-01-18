@@ -82,8 +82,7 @@ def run_egp(
         egp_path (Union[str, Path]): SAS Enterprise Guide file path.
         profile_name (str, optional): profile name to use. Defaults to 'SAS Asia'.
         eg_version (str, optional): Which version of EG to use. Defaults to '7.1'.
-        overwrite (bool, optional): controls whether to save the egp file after exection.
-            if False, timestamp is added to filename. Defaults to False.
+        overwrite (bool, optional): controls whether to save the egp file after exection. if False, timestamp is added to filename. Defaults to False.
         remove_log (bool, optional): Whether to remove log files or not. Defaults to True.
         verbose (bool, optional): [description]. Defaults to False.
     """

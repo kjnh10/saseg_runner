@@ -15,6 +15,7 @@ pytest-cov = "*"
 setuptools-scm = "*"
 sphinx="*"
 sphinxcontrib-apidoc="*"
+sphinx-rtd-theme="*"
 
 [packages]
 pypiwin32 = "*"
